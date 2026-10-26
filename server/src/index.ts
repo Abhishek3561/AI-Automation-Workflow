@@ -8,6 +8,7 @@ import runRoutes from "./routes/runs";
 import documentRoutes from "./routes/documents";
 import hookRoutes from "./routes/hooks";
 import "./queue/worker";
+import { syncAllSchedules } from "./queue/scheduler";
 
 const app = express();
 
@@ -33,4 +34,6 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 app.listen(env.port, () => {
   console.log(`Server running on http://localhost:${env.port}`);
+  // restore repeating schedules (they live in Redis, which free hosting can reset)
+  syncAllSchedules().catch((err) => console.error("Could not restore schedules:", err));
 });

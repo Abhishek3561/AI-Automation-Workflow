@@ -5,6 +5,6 @@ import { env } from "../config/env";
 types.setTypeParser(1082, (value: string) => value);
 
 const url = new URL(env.databaseUrl);
-url.search = "";
+url.searchParams.delete("schema"); // keep sslmode, which hosted databases require
 
 export const demoPool = new Pool({ connectionString: url.toString(), max: 3 });

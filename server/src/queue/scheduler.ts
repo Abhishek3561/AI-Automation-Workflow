@@ -1,3 +1,4 @@
+import { prisma } from "../db/prisma";
 import { runQueue } from "./runQueue";
 import type { GraphNode } from "../engine/runner";
 
@@ -30,4 +31,21 @@ export async function syncSchedule(workflow: { id: string; userId: string; graph
 
 export async function removeSchedule(workflowId: string) {
   await runQueue.removeJobScheduler(schedulerId(workflowId));
+}
+
+// re-creates every schedule from the database (used when the server starts)
+export async function syncAllSchedules() {
+  const workflows = await prisma.workflow.findMany({
+    select: { id: true, userId: true, graph: true },
+  });
+  for (const wf of workflows) {
+    const graph = wf.graph as { nodes?: GraphNode[] } | null;
+    const trigger = graph?.nodes?.find((n) => n.data.kind === "trigger");
+    if (trigger?.data.config?.triggerType !== "schedule") continue;
+    try {
+      await syncSchedule(wf);
+    } catch (err) {
+      console.error(`Could not restore schedule for ${wf.id}:`, err);
+    }
+  }
 }

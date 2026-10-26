@@ -50,11 +50,18 @@ $$;
 
 GRANT USAGE ON SCHEMA demo TO wf_reader;
 GRANT SELECT ON ALL TABLES IN SCHEMA demo TO wf_reader;
+DO $$
+BEGIN
+  EXECUTE 'GRANT wf_reader TO CURRENT_USER WITH SET TRUE';
+EXCEPTION WHEN OTHERS THEN
+  NULL;
+END
+$$;
 `;
 
 async function main() {
   const url = new URL(process.env.DATABASE_URL || "");
-  url.search = "";
+  url.searchParams.delete("schema");
   const pool = new Pool({ connectionString: url.toString() });
   await pool.query(SQL);
   await pool.end();
