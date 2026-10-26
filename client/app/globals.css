@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #fafafb;
+  color: #0f172a;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* canvas styling (React Flow) */
+.react-flow .react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #6366f1;
+  border: 2px solid #ffffff;
+}
+.react-flow .react-flow__edge-path {
+  stroke: #94a3b8;
+  stroke-width: 2;
+}
+.react-flow .react-flow__controls {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+.react-flow .react-flow__controls-button {
+  border-bottom: 1px solid #e2e8f0;
+}
+.react-flow .react-flow__minimap {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
